@@ -1,2 +1,3 @@
 rootProject.name = 'emergency-notification-system'
 includeBuild 'eureka-server'
+includeBuild 'gateway'
