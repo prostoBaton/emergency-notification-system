@@ -17,6 +17,11 @@
                   <project path="$PROJECT_DIR$/gateway" />
                 </projects>
               </build>
+              <build path="$PROJECT_DIR$/request-manager" name="request-manager">
+                <projects>
+                  <project path="$PROJECT_DIR$/request-manager" />
+                </projects>
+              </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
@@ -27,6 +32,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/eureka-server" />
             <option value="$PROJECT_DIR$/gateway" />
+            <option value="$PROJECT_DIR$/request-manager" />
           </set>
         </option>
       </GradleProjectSettings>
@@ -45,6 +51,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/gateway" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/request-manager" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/request-manager" />
           </set>
         </option>
       </GradleProjectSettings>
