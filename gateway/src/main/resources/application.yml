@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: security-service
+          uri: lb://security
+          predicates:
+            - Path=/auth/**
+
+        - id: request-manager
+          uri: lb://manager
+          predicates:
+            - Path=/test/**
+          filters:
+            - AuthFilter

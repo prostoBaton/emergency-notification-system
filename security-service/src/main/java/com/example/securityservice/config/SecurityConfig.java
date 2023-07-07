@@ -1,18 +1,19 @@
-package com.example.requestmanager.config;
+package com.example.securityservice.config;
 
-import com.example.requestmanager.repository.UserRepository;
-import com.example.requestmanager.service.UserDetailsServiceImpl;
+
+import com.example.securityservice.exception.UserNotFoundException;
+import com.example.securityservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,24 +23,25 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public SecurityConfig(UserRepository userRepository, UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(registry ->{registry.requestMatchers("test/register").permitAll();})
+                .authorizeHttpRequests(registry ->{
+                    registry.requestMatchers("auth/register").permitAll();
+                    registry.requestMatchers("auth/token").permitAll();})
                 .authenticationProvider(authenticationProvider())
                 .build();
     }
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -47,13 +49,17 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
     }
 
-
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(UserNotFoundException::new);
+    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
