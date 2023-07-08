@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,8 @@ public class JwtService {
         Date exp = Date.from(ZonedDateTime.now().plusHours(2).toInstant());
 
         return Jwts.builder()
+                .setClaims(getClaims(userDetails))
                 .setSubject(userDetails.getUsername())
-                .setClaims(new HashMap<>())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(exp)
                 .setIssuer("security-service")
@@ -65,4 +64,9 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
+    public HashMap<String, String> getClaims(UserDetails userDetails){
+        HashMap<String, String> claims = new HashMap<>();
+        claims.put("password", userDetails.getPassword());
+        return claims;
+    }
 }

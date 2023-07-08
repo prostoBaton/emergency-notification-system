@@ -22,6 +22,11 @@
                   <project path="$PROJECT_DIR$/request-manager" />
                 </projects>
               </build>
+              <build path="$PROJECT_DIR$/security-service" name="security-service">
+                <projects>
+                  <project path="$PROJECT_DIR$/security-service" />
+                </projects>
+              </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
@@ -33,6 +38,7 @@
             <option value="$PROJECT_DIR$/eureka-server" />
             <option value="$PROJECT_DIR$/gateway" />
             <option value="$PROJECT_DIR$/request-manager" />
+            <option value="$PROJECT_DIR$/security-service" />
           </set>
         </option>
       </GradleProjectSettings>
