@@ -3,6 +3,7 @@ package com.example.securityservice.controller;
 import com.example.securityservice.dto.UserDto;
 import com.example.securityservice.exception.UserNotFoundException;
 import com.example.securityservice.model.User;
+import com.example.securityservice.service.InvalidTokenException;
 import com.example.securityservice.service.JwtService;
 import com.example.securityservice.service.UserService;
 import jakarta.validation.Valid;
@@ -55,7 +56,7 @@ public class AuthController {
         String username = jwtService.extractUsername(token);
         User user = userService.findByUsername(username).orElse(null);
         if (user != null && jwtService.isJwtValid(token, user)) return "token is valid";
-        return "invalid token";
+        throw new InvalidTokenException("invalid token");
 
     }
 

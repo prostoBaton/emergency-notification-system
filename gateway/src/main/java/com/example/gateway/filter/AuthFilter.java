@@ -1,6 +1,7 @@
 package com.example.gateway.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
     private final RouteValidator routeValidator;
     private final RestTemplate restTemplate;
+    @Value("${validate_Url}")
+    private String validateUrl;
 
     @Autowired
     public AuthFilter(RouteValidator routeValidator, RestTemplate restTemplate) {
@@ -36,12 +39,10 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 if (authHeader!=null && authHeader.startsWith("Bearer "))
                     authHeader = authHeader.substring(7);
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Authorization", authHeader);
-                RequestEntity<Void> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, URI.create("http://secutity-service/validate?token=" + authHeader));
+                RequestEntity<Void> requestEntity = new RequestEntity<>( HttpMethod.GET, URI.create(validateUrl + authHeader));
                 try {
                     restTemplate.exchange(requestEntity, String.class);
-                } catch (Exception e) {throw new RuntimeException("invalid access");}
+                } catch (Exception e) {throw new RuntimeException("invalid access: " + e.getMessage());}
             }
             return chain.filter(exchange);
         });
