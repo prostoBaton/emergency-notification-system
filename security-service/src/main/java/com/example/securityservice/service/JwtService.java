@@ -24,7 +24,7 @@ public class JwtService {
         Date exp = Date.from(ZonedDateTime.now().plusHours(2).toInstant());
 
         return Jwts.builder()
-                .setClaims(getClaims(userDetails))
+                .setClaims(createClaims(userDetails))
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(exp)
@@ -64,7 +64,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    public HashMap<String, String> getClaims(UserDetails userDetails){
+    public HashMap<String, String> createClaims(UserDetails userDetails){
         HashMap<String, String> claims = new HashMap<>();
         claims.put("password", userDetails.getPassword());
         return claims;

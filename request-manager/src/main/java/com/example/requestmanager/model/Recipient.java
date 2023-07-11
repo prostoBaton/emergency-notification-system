@@ -16,7 +16,7 @@ public class Recipient {
     private int id;
 
     @Column(name = "phone")
-    @Pattern(regexp="(^$|[0-9]{10})")
+    @Pattern(regexp="(^$|[0-9]{11})")
     private String phone;
 
     @Column(name = "email")
