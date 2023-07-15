@@ -32,6 +32,6 @@ public class BatchController {
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromCsv(user, file);
 
-        return "gowno";
+        return "users have been saved";
     }
 }
