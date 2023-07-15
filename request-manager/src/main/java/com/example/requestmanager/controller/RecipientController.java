@@ -32,8 +32,7 @@ public class RecipientController {
 
     @GetMapping("/get")
     public List<RecipientDto> getRecipients(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader){
-        authHeader = authHeader.substring(7);
-        List<Recipient> recipients =  jwtDecoder.extractUser(authHeader).getRecipients();
+        List<Recipient> recipients =  jwtDecoder.extractUser(authHeader.substring(7)).getRecipients();
 
         List<RecipientDto> recipientsDto = new ArrayList<>();
 
@@ -47,8 +46,7 @@ public class RecipientController {
     @GetMapping("/get/{id}")
     public RecipientDto getRecipient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
                                      @PathVariable("id") int id){
-        authHeader = authHeader.substring(7);
-        User user = jwtDecoder.extractUser(authHeader);
+        User user = jwtDecoder.extractUser(authHeader.substring(7));
         Recipient recipient = recipientService.findById(id).orElse(null);
         for (Recipient userRecipient : user.getRecipients()) {
             if (userRecipient.equals(recipient))
@@ -58,13 +56,12 @@ public class RecipientController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody @Valid RecipientDto recipientDto){
-        authHeader = authHeader.substring(7);
+    public String create(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                         @RequestBody @Valid RecipientDto recipientDto){
         Recipient recipient = modelMapper.map(recipientDto, Recipient.class);
-        recipient.setOwner(jwtDecoder.extractUser(authHeader));
+        recipient.setOwner(jwtDecoder.extractUser(authHeader.substring(7)));
 
         recipientService.save(recipient);
         return "recipient has been added";
-
     }
 }
