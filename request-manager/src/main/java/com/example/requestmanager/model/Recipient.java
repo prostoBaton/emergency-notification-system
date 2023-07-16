@@ -12,7 +12,8 @@ public class Recipient {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "sequence_id_auto_gen", allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence_id_auto_gen")
     private int id;
 
     @Column(name = "phone")
