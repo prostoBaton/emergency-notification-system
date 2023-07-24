@@ -25,12 +25,22 @@ public class BatchController {
         this.jwtDecoder = jwtDecoder;
     }
 
-    @PostMapping("/csv")
+    @PostMapping("/save/csv")
     public String uploadCsv(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
                             @RequestPart @NotNull(message = "csv shouldn't be empty") MultipartFile file) {
 
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromCsv(user, file);
+
+        return "users have been saved";
+    }
+
+    @PostMapping("/save/xlsx")
+    public String uploadXlsx(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                            @RequestPart @NotNull(message = "xlsx shouldn't be empty")MultipartFile file){
+
+        User user = jwtDecoder.extractUser(authHeader.substring(7));
+        batchService.saveFromXlsx(user, file);
 
         return "users have been saved";
     }

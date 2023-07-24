@@ -8,6 +8,9 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.exceptions.CsvException;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,5 +55,27 @@ public class BatchService {
              }
     }
     @Transactional
-    public void saveFromXlsx(){}
+    public void saveFromXlsx(User user, MultipartFile file){
+
+        List<Recipient> recipients = new ArrayList<>();
+
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                XSSFRow row = sheet.getRow(i);
+
+                System.out.println(String.format("%.0f", row.getCell(0).getNumericCellValue()));
+
+                Recipient recipient = new Recipient(String.format("%.0f",row.getCell(0).getNumericCellValue()), row.getCell(1).getStringCellValue());
+                recipient.setOwner(user);
+                recipients.add(recipient);
+            }
+        } catch (IOException e) { //todo exception
+        }
+        if (!recipients.isEmpty())
+            recipientRepository.saveAll(recipients);
+        //todo else throw new ...
+    }
 }
