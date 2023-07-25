@@ -1,5 +1,8 @@
 package com.example.requestmanager.model;
 
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvIgnore;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -27,6 +30,7 @@ public class Recipient {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @CsvIgnore
     private User owner;
 
     public Recipient(String phone, String email) {
