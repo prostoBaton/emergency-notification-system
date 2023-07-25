@@ -1,7 +1,6 @@
 package com.example.requestmanager.controller;
 
 
-import com.example.requestmanager.dto.RecipientDto;
 import com.example.requestmanager.model.Recipient;
 import com.example.requestmanager.model.User;
 import com.example.requestmanager.service.BatchService;
@@ -15,18 +14,20 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @RestController
 @RequestMapping("/batch")
-public class BatchController {
+public class BatchController { //todo test if file has null field(prob should do exception for these) and if user hasn't any recipients
 
     private final BatchService batchService;
     private final JwtDecoder jwtDecoder;
@@ -75,6 +76,19 @@ public class BatchController {
         } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    @GetMapping("/get/xlsx")
+    public ResponseEntity<Resource> getXlsx(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader){
+        User user = jwtDecoder.extractUser(authHeader.substring(7));
+
+        byte[] data = batchService.getXlsx(user);
+        ByteArrayResource byteArrayResource = new ByteArrayResource(data);
+
+        return ResponseEntity.ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment; filename=\"recipients.xlsx\"")
+                .body(byteArrayResource);
     }
 }

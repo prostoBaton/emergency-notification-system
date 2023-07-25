@@ -60,8 +60,6 @@ public class BatchService {
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 XSSFRow row = sheet.getRow(i);
 
-                System.out.println(String.format("%.0f", row.getCell(0).getNumericCellValue()));
-
                 Recipient recipient = new Recipient(String.format("%.0f",row.getCell(0).getNumericCellValue()), row.getCell(1).getStringCellValue());
                 recipient.setOwner(user);
                 recipients.add(recipient);
@@ -71,5 +69,36 @@ public class BatchService {
         if (!recipients.isEmpty())
             recipientRepository.saveAll(recipients);
         //todo else throw new ...
+    }
+
+
+    public byte[] getXlsx(User user) {
+
+        List<Recipient> recipients = user.getRecipients();
+
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet("Recipients");
+
+            XSSFRow headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Id");
+            headerRow.createCell(1).setCellValue("Phone");
+            headerRow.createCell(2).setCellValue("Email");
+
+            for (int i = 0; i < recipients.size(); i++){
+
+                Recipient recipient = recipients.get(i);
+
+                XSSFRow row = sheet.createRow(i+1);
+                row.createCell(0).setCellValue(recipient.getId());
+                row.createCell(1).setCellValue(recipient.getPhone());
+                row.createCell(2).setCellValue(recipient.getEmail());
+            }
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
