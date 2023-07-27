@@ -52,7 +52,7 @@ public class RecipientController {
             if (userRecipient.equals(recipient))
                 return new RecipientDto(recipient.getPhone(), recipient.getEmail());
         }
-        throw new RecipientNotFoundException("recipient not found or you don't own them"); //TODO вывод пользователю а не в консоль
+        throw new RecipientNotFoundException("recipient not found or you don't own them");
     }
 
     @PostMapping("/create")

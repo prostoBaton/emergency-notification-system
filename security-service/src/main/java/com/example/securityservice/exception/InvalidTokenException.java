@@ -1,4 +1,4 @@
-package com.example.securityservice.service;
+package com.example.securityservice.exception;
 
 import io.jsonwebtoken.JwtException;
 

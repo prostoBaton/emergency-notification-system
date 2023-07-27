@@ -45,8 +45,7 @@ public class BatchService {
 
             recipientRepository.saveAll(recipients);
 
-        } catch (IOException e) {//TODO some error prob idk
-             }
+        } catch (IOException e) {}
     }
     @Transactional
     public void saveFromXlsx(User user, MultipartFile file){
@@ -58,14 +57,19 @@ public class BatchService {
             XSSFSheet sheet = workbook.getSheetAt(0);
 
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
-                XSSFRow row = sheet.getRow(i);
 
-                Recipient recipient = new Recipient(String.format("%.0f",row.getCell(0).getNumericCellValue()), row.getCell(1).getStringCellValue());
+                XSSFRow row = sheet.getRow(i);
+                Recipient recipient = new Recipient();
+
+                if (row.getCell(0) != null)
+                    recipient.setPhone(String.format("%.0f", row.getCell(0).getNumericCellValue()));
+                if (row.getCell(1) != null)
+                    recipient.setEmail(row.getCell(1).getStringCellValue());
+
                 recipient.setOwner(user);
                 recipients.add(recipient);
             }
-        } catch (IOException e) { //todo exception
-        }
+        } catch (IOException e) {}
         if (!recipients.isEmpty())
             recipientRepository.saveAll(recipients);
         //todo else throw new ...

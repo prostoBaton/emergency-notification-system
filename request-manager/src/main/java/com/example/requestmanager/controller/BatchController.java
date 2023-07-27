@@ -1,6 +1,7 @@
 package com.example.requestmanager.controller;
 
 
+import com.example.requestmanager.exception.InvalidFileFormatException;
 import com.example.requestmanager.model.Recipient;
 import com.example.requestmanager.model.User;
 import com.example.requestmanager.service.BatchService;
@@ -22,12 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-
+import java.util.Objects;
 
 
 @RestController
 @RequestMapping("/batch")
-public class BatchController { //todo test if file has null field(prob should do exception for these) and if user hasn't any recipients
+public class BatchController {
 
     private final BatchService batchService;
     private final JwtDecoder jwtDecoder;
@@ -40,7 +41,10 @@ public class BatchController { //todo test if file has null field(prob should do
 
     @PostMapping("/save/csv")
     public String uploadCsv(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                            @RequestPart @NotNull(message = "csv shouldn't be empty") MultipartFile file) {
+                            @RequestPart @NotNull MultipartFile file) {
+
+        if (!Objects.equals(file.getContentType(), "text/csv"))
+            throw new InvalidFileFormatException("invalid file format");
 
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromCsv(user, file);
@@ -50,7 +54,10 @@ public class BatchController { //todo test if file has null field(prob should do
 
     @PostMapping("/save/xlsx")
     public String uploadXlsx(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                            @RequestPart @NotNull(message = "xlsx shouldn't be empty")MultipartFile file){
+                            @RequestPart @NotNull MultipartFile file){
+
+        if (!Objects.equals(file.getContentType(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+            throw new InvalidFileFormatException("invalid file format");
 
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromXlsx(user, file);

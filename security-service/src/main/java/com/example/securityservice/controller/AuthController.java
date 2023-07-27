@@ -3,7 +3,7 @@ package com.example.securityservice.controller;
 import com.example.securityservice.dto.UserDto;
 import com.example.securityservice.exception.UserNotFoundException;
 import com.example.securityservice.model.User;
-import com.example.securityservice.service.InvalidTokenException;
+import com.example.securityservice.exception.InvalidTokenException;
 import com.example.securityservice.service.JwtService;
 import com.example.securityservice.service.UserService;
 import jakarta.validation.Valid;

@@ -18,5 +18,4 @@ public class RequestManagerApplication {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
-    //TODO exception handler and error response
 }
