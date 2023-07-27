@@ -49,7 +49,7 @@ public class BatchController {
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromCsv(user, file);
 
-        return "users have been saved";
+        return "recipients have been saved";
     }
 
     @PostMapping("/save/xlsx")
@@ -62,7 +62,7 @@ public class BatchController {
         User user = jwtDecoder.extractUser(authHeader.substring(7));
         batchService.saveFromXlsx(user, file);
 
-        return "users have been saved";
+        return "recipients have been saved";
     }
 
     @GetMapping("/get/csv")
