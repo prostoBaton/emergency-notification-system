@@ -81,7 +81,7 @@ public class BatchService {
         List<Recipient> recipients = user.getRecipients();
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            XSSFSheet sheet = workbook.createSheet("Recipients");
+            XSSFSheet sheet = workbook.createSheet("Recipients"); //TODO maybe should response with RecipientDto
 
             XSSFRow headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Id");

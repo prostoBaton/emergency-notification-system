@@ -12,3 +12,9 @@ spring:
             - Path=/**
           filters:
             - AuthFilter
+        - id: sender-service
+          uri: lb://sender
+          predicates:
+            - Path=/**
+          filters:
+            - AuthFilter
