@@ -1,7 +1,7 @@
 package com.example.requestmanager.controller;
 
 import com.example.requestmanager.dto.RecipientDto;
-import com.example.requestmanager.exception.RecipientNotFoundException;
+import com.example.requestmanager.exception.EntityNotFoundException;
 import com.example.requestmanager.model.Recipient;
 import com.example.requestmanager.model.User;
 import com.example.requestmanager.service.JwtDecoder;
@@ -52,7 +52,7 @@ public class RecipientController {
             if (userRecipient.equals(recipient))
                 return new RecipientDto(recipient.getPhone(), recipient.getEmail());
         }
-        throw new RecipientNotFoundException("recipient not found or you don't own them");
+        throw new EntityNotFoundException("recipient not found or you don't own them");
     }
 
     @PostMapping("/create")

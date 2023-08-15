@@ -34,7 +34,7 @@ public class BatchController {
     private final JwtDecoder jwtDecoder;
 
     @Autowired
-    public BatchController(BatchService batchService, JwtDecoder jwtDecoder) {
+    public BatchController(BatchService batchService, JwtDecoder jwtDecoder) { //TODO exception if no file
         this.batchService = batchService;
         this.jwtDecoder = jwtDecoder;
     }

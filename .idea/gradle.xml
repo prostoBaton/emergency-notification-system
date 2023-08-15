@@ -27,6 +27,11 @@
                   <project path="$PROJECT_DIR$/security-service" />
                 </projects>
               </build>
+              <build path="$PROJECT_DIR$/sender-service" name="sender-service">
+                <projects>
+                  <project path="$PROJECT_DIR$/sender-service" />
+                </projects>
+              </build>
             </builds>
           </compositeBuild>
         </compositeConfiguration>
@@ -39,6 +44,7 @@
             <option value="$PROJECT_DIR$/gateway" />
             <option value="$PROJECT_DIR$/request-manager" />
             <option value="$PROJECT_DIR$/security-service" />
+            <option value="$PROJECT_DIR$/sender-service" />
           </set>
         </option>
       </GradleProjectSettings>
@@ -75,6 +81,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/security-service" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/sender-service" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/sender-service" />
           </set>
         </option>
       </GradleProjectSettings>
