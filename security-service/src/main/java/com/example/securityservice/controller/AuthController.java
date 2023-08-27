@@ -48,7 +48,7 @@ public class AuthController {
                 userDto.getUsername(), userDto.getPassword()));
         if (authentication.isAuthenticated())
             return jwtService.generateToken(user);
-        return null;
+        return "unable to generate token";
     }
 
     @GetMapping("/validate")

@@ -36,4 +36,20 @@ public class TemplateController {
         templateService.save(template);
         return "template has been created";
     }
+
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable int id){
+        Template template = templateService.findById(id).orElseThrow(() -> new EntityNotFoundException("template not found"));
+        templateService.delete(template);
+        return "template has been deleted";
+    }
+
+    @PatchMapping("/update/{id}")
+    public String update(@PathVariable int id,
+                         @RequestBody @Valid Template template){
+        Template oldTemplate = templateService.findById(id).orElseThrow(() -> new EntityNotFoundException("template not found"));
+        templateService.update(oldTemplate, template);
+        return "template has been updated";
+    }
+
 }

@@ -31,4 +31,15 @@ public class TemplateService {
     public void save(Template template){
         templateRepository.save(template);
     }
+
+    @Transactional
+    public void delete(Template template) {
+        templateRepository.delete(template);
+    }
+
+    @Transactional
+    public void update(Template oldTemplate, Template template) {
+        template.setId(oldTemplate.getId());
+        templateRepository.save(template);
+    }
 }

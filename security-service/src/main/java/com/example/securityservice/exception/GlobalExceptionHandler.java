@@ -16,4 +16,10 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse("User not found", LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(404));
     }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> invalidToken(InvalidTokenException e){
+        ErrorResponse response = new ErrorResponse(e.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatusCode.valueOf(403));
+    }
 }
