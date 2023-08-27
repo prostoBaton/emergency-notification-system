@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/recipient")
@@ -63,5 +64,34 @@ public class RecipientController {
 
         recipientService.save(recipient);
         return "recipient has been added";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String delete(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                         @PathVariable int id){
+        User user = jwtDecoder.extractUser(authHeader.substring(7));
+        for (Recipient userRecipient : user.getRecipients()) {
+            if (userRecipient.getId() == id) {
+                recipientService.delete(recipientService.findById(id).get());
+                return "recipient has been deleted";
+            }
+        }
+        throw new EntityNotFoundException("recipient not found");
+    }
+
+    @PatchMapping("/update/{id}")
+    public String update(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+                         @PathVariable int id,
+                         @RequestBody @Valid RecipientDto recipientDto){
+        User user = jwtDecoder.extractUser(authHeader.substring(7));
+
+        for (Recipient userRecipient : user.getRecipients()) {
+            if (userRecipient.getId() == id) {
+                Recipient recipient = modelMapper.map(recipientDto, Recipient.class);
+                recipientService.update(user, recipient, id);
+                return "recipient has been updated";
+            }
+        }
+        throw new EntityNotFoundException("recipient not found");
     }
 }
